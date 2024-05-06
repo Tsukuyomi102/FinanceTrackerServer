@@ -1,17 +1,25 @@
 package org.example;
+import org.example.Models.User;
+import org.example.Repositories.UserRepository;
+
 import static spark.Spark.*;
 
 public class Main {
     public static void main(String[] args) {
-        port(8080);
-        get("/hello", (req, res) -> "Hello, world!");
-        post("/hello", (req, res) -> {
+        post("/user", (req, res) -> {
             String name = req.queryParams("name");
-            return "Hello, " + name + "!";
+            String email = req.queryParams("email");
+            String password = req.queryParams("password");
+            UserRepository user = new UserRepository();
+            user.addUser(name, email, password);
+            return "User added successfully";
         });
-        get("/hello/:name", (req, res) -> {
-            String name = req.params(":name");
-            return "Hello, " + name + "!";
+
+        get("/user/:id", (req, res) -> {
+            int userId = Integer.parseInt(req.params(":id"));
+            UserRepository userRepository = new UserRepository();
+            User user = userRepository.getUserById(userId);
+            return user.toString();
         });
     }
 }
