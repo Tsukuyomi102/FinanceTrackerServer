@@ -17,6 +17,26 @@ public class UserRepository {
         }
     }
 
+    public User loginUser(String email, String password) {
+        User user = null;
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM \"User\" WHERE \"Email\" = ? AND \"Password\" = ?")) {
+            statement.setString(1, email);
+            statement.setString(2, password);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                user = new User(rs.getInt("UserID"), rs.getString("Name"), rs.getString("Email"), rs.getString("Password"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error: User login failed");
+        }
+        return user;
+    }
+
+
+
+
     public User getUserById(int userId) {
         User user = null;
         try (Connection connection = DBConnection.getConnection();

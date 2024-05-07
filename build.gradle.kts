@@ -14,6 +14,8 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation("com.sparkjava:spark-core:2.9.4")
     implementation("org.postgresql:postgresql:42.2.23")
+    implementation("com.google.code.gson:gson:2.10.1")
+
 }
 
 tasks.test {
