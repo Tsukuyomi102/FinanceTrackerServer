@@ -52,4 +52,18 @@ public class UserRepository {
         return user;
     }
 
+    public int getUserIdByEmail(String email) {
+        int userId = -1;
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement("SELECT \"UserID\" FROM \"User\" WHERE \"Email\" = ?")) {
+            statement.setString(1, email);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                userId = rs.getInt("UserID");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return userId;
+    }
 }

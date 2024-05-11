@@ -45,31 +45,49 @@ public class Main {
         });
 
         //Card requests
-        post("/user/:userId/card", (req, res) -> {
-            int userId = Integer.parseInt(req.params(":userId"));
+        post("/user/card", (req, res) -> {
+            String email = req.queryParams("email");
             String name = req.queryParams("name");
             int balance = Integer.parseInt(req.queryParams("balance"));
             long number = Long.parseLong(req.queryParams("number"));
             int month = Integer.parseInt(req.queryParams("month"));
             int year = Integer.parseInt(req.queryParams("year"));
-            CardRepository cardRepository = new CardRepository();
-            cardRepository.addCard(userId, name, balance, number, month, year);
-            return 1;
-        });
 
-        get("/user/:userId/card", (req, res) -> {
-            int userId = Integer.parseInt(req.params(":userId"));
-            CardRepository cardRepository = new CardRepository();
-            List<Card> cards = cardRepository.getCardsByUserId(userId);
-            if (cards != null && !cards.isEmpty()) {
-                Gson gson = new Gson();
-                String json = gson.toJson(cards);
-                res.type("application/json");
-                return json;
+            UserRepository userRepository = new UserRepository();
+            int userId = userRepository.getUserIdByEmail(email);
+
+            if (userId != -1) {
+                CardRepository cardRepository = new CardRepository();
+                cardRepository.addCard(userId, name, balance, number, month, year);
+                return 1;
             } else {
                 res.status(404);
-                return "User not found or user has no cards!";
+                return "User not found!";
             }
         });
+
+        get("/user/:email/card", (req, res) -> {
+            String email = req.params(":email");
+            UserRepository userRepository = new UserRepository();
+            int userId = userRepository.getUserIdByEmail(email);
+
+            if (userId != -1) {
+                CardRepository cardRepository = new CardRepository();
+                List<Card> cards = cardRepository.getCardsByUserId(userId);
+                if (cards != null && !cards.isEmpty()) {
+                    Gson gson = new Gson();
+                    String json = gson.toJson(cards);
+                    res.type("application/json");
+                    return json;
+                } else {
+                    res.status(404);
+                    return "User has no cards!";
+                }
+            } else {
+                res.status(404);
+                return "User not found!";
+            }
+        });
+
     }
 }
