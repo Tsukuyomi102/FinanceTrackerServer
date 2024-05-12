@@ -2,9 +2,9 @@ package org.example.Models;
 
 public class Card {
     private int CardID;
-    private String name;
-    private Integer Balance;
-    private Long number;
+    private String cardName;
+    private Integer cardBalance;
+    private Long cardNumber;
     private Integer month;
     private Integer year;
 
@@ -12,20 +12,20 @@ public class Card {
         this.CardID = cardID;
     }
 
-    public void setBalance(Integer balance) {
-        this.Balance = balance;
+    public void setCardBalance(Integer cardBalance) {
+        this.cardBalance = cardBalance;
     }
 
     public void setMonth(Integer month) {
         this.month = month;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCardName(String cardName) {
+        this.cardName = cardName;
     }
 
-    public void setNumber(Long number) {
-        this.number = number;
+    public void setCardNumber(Long cardNumber) {
+        this.cardNumber = cardNumber;
     }
 
     public void setYear(Integer year) {
