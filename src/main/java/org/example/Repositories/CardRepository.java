@@ -1,4 +1,5 @@
 package org.example.Repositories;
+
 import org.example.Connections.DBConnection;
 import org.example.Models.Card;
 
@@ -52,5 +53,26 @@ public class CardRepository {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public Card getCardById(int cardId) {
+        Card card = null;
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM \"Card\" WHERE \"CardID\" = ?")) {
+            statement.setInt(1, cardId);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                card = new Card();
+                card.setCardID(rs.getInt("CardID"));
+                card.setCardName(rs.getString("Name"));
+                card.setCardBalance(rs.getInt("Balance"));
+                card.setCardNumber(rs.getLong("Number"));
+                card.setMonth(rs.getInt("Month"));
+                card.setYear(rs.getInt("Year"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return card;
     }
 }

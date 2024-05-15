@@ -31,4 +31,16 @@ public class Card {
     public void setYear(Integer year) {
         this.year = year;
     }
+
+    public Long getCardNumber() {
+        return this.cardNumber;
+    }
+
+    public int getCardID() {
+        return this.CardID;
+    }
+
+    public Integer getCardBalance() {
+        return this.cardBalance;
+    }
 }

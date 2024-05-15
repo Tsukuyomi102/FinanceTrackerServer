@@ -34,9 +34,6 @@ public class UserRepository {
         return user;
     }
 
-
-
-
     public User getUserById(int userId) {
         User user = null;
         try (Connection connection = DBConnection.getConnection();

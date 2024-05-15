@@ -21,4 +21,16 @@ public class Cash {
     public void setCashName(String cashName) {
         this.cashName = cashName;
     }
+
+    public String getCashName() {
+        return this.cashName;
+    }
+
+    public int getCashID() {
+        return this.CashID;
+    }
+
+    public int getCashBalance() {
+        return this.cashBalance;
+    }
 }

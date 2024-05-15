@@ -1,7 +1,6 @@
 package org.example.Repositories;
 
 import org.example.Connections.DBConnection;
-import org.example.Models.Card;
 import org.example.Models.Cash;
 
 import java.sql.Connection;
@@ -50,5 +49,24 @@ public class CashRepository {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public Cash getCashById(int cashId) {
+        Cash cash = null;
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM \"Cash\" WHERE \"CashID\" = ?")) {
+            statement.setInt(1, cashId);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                cash = new Cash();
+                cash.setCashID(rs.getInt("CashID"));
+                cash.setCashBalance(rs.getInt("Balance"));
+                cash.setCashName(rs.getString("Name"));
+                cash.setCashDescription(rs.getString("Description"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return cash;
     }
 }
