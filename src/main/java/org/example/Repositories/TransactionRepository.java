@@ -82,6 +82,61 @@ public class TransactionRepository {
         return null;
     }
 
+    public boolean deleteTransactionAndUpdateBalance(int transactionId) {
+        try {
+            Connection connection = DBConnection.getConnection();
+            String query = "SELECT \"CardID\", \"CashID\", \"IsCreditCard\", \"Amount\", \"IsIncome\" FROM \"Transaction\" WHERE \"TransactionID\" = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, transactionId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                boolean isCreditCard = resultSet.getBoolean("IsCreditCard");
+                if (isCreditCard) {
+                    int cardId = resultSet.getInt("CardID");
+                    int amount = resultSet.getInt("Amount");
+                    boolean isIncome = resultSet.getBoolean("IsIncome");
+
+                    String deleteQuery = "DELETE FROM \"Transaction\" WHERE \"TransactionID\" = ?";
+                    PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
+                    deleteStatement.setInt(1, transactionId);
+                    deleteStatement.executeUpdate();
+
+                    if (cardId != -1) {
+                        int newBalance = calculateNewCardBalance(cardId, amount, !isIncome); // Учитывает удаленную транзакцию
+                        String updateQuery = "UPDATE \"Card\" SET \"Balance\" = ? WHERE \"CardID\" = ?";
+                        PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+                        updateStatement.setInt(1, newBalance);
+                        updateStatement.setInt(2, cardId);
+                        updateStatement.executeUpdate();
+                    }
+                    return true;
+                } else {
+                    int cashId = resultSet.getInt("CashID");
+                    int amount = resultSet.getInt("Amount");
+                    boolean isIncome = resultSet.getBoolean("IsIncome");
+
+                    String deleteQuery = "DELETE FROM \"Transaction\" WHERE \"TransactionID\" = ?";
+                    PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
+                    deleteStatement.setInt(1, transactionId);
+                    deleteStatement.executeUpdate();
+
+                    if (cashId != -1) {
+                        int newBalance = calculateNewCashBalance(cashId, amount, !isIncome); // Учитывает удаленную транзакцию
+                        String updateQuery = "UPDATE \"Cash\" SET \"Balance\" = ? WHERE \"CashID\" = ?";
+                        PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+                        updateStatement.setInt(1, newBalance);
+                        updateStatement.setInt(2, cashId);
+                        updateStatement.executeUpdate();
+                    }
+                    return true;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     private int calculateNewCardBalance(int cardId, int amount, boolean isIncome) {
         CardRepository cardRepository = new CardRepository();
         Card card = cardRepository.getCardById(cardId);

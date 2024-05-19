@@ -8,6 +8,7 @@ import org.example.Repositories.CardRepository;
 import org.example.Repositories.CashRepository;
 import org.example.Repositories.TransactionRepository;
 import org.example.Repositories.UserRepository;
+import spark.Spark;
 
 import java.util.List;
 
@@ -15,6 +16,10 @@ import static spark.Spark.*;
 
 public class Main {
     public static void main(String[] args) {
+
+        Spark.ipAddress("0.0.0.0");
+        Spark.port(4567);
+
         //User requests 
         post("/user", (req, res) -> {
             String name = req.queryParams("name");
@@ -137,7 +142,6 @@ public class Main {
         });
 
         //Transaction requests
-        //Transaction requests
         post("/user/transaction", (req, res) -> {
             String email = req.queryParams("email");
             boolean isIncome = Boolean.parseBoolean(req.queryParams("isIncome"));
@@ -207,6 +211,19 @@ public class Main {
             } else {
                 res.status(404);
                 return "User not found!";
+            }
+        });
+
+        delete("/user/transaction/:transactionId", (req, res) -> {
+            int transactionId = Integer.parseInt(req.params(":transactionId"));
+            TransactionRepository transactionRepository = new TransactionRepository();
+            boolean deleted = transactionRepository.deleteTransactionAndUpdateBalance(transactionId);
+
+            if (deleted) {
+                return "Transaction deleted successfully";
+            } else {
+                res.status(404);
+                return "Transaction not found!";
             }
         });
     }
