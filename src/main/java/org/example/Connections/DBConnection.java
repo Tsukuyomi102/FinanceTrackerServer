@@ -6,7 +6,7 @@ import java.sql.SQLException;
 public class DBConnection {
     private static final String url = "jdbc:postgresql://localhost:5432/FinanceTracker";
     private static final String user = "postgres";
-    private static final String password = "insomnia102";
+    private static final String password = "postgres";
 
     public static Connection getConnection() {
         try {

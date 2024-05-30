@@ -16,9 +16,7 @@ import static spark.Spark.*;
 
 public class Main {
     public static void main(String[] args) {
-
-        Spark.ipAddress("0.0.0.0");
-        Spark.port(4567);
+        Spark.port(8090);
 
         //User requests 
         post("/user", (req, res) -> {
@@ -214,16 +212,26 @@ public class Main {
             }
         });
 
-        delete("/user/transaction/:transactionId", (req, res) -> {
-            int transactionId = Integer.parseInt(req.params(":transactionId"));
-            TransactionRepository transactionRepository = new TransactionRepository();
-            boolean deleted = transactionRepository.deleteTransactionAndUpdateBalance(transactionId);
+        delete("/user/:email/transaction/:name", (req, res) -> {
+            String email = req.params(":email");
+            String transactionName = req.params(":name");
 
-            if (deleted) {
-                return "Transaction deleted successfully";
+            UserRepository userRepository = new UserRepository();
+            int userId = userRepository.getUserIdByEmail(email);
+
+            if (userId != -1) {
+                TransactionRepository transactionRepository = new TransactionRepository();
+                boolean deleted = transactionRepository.deleteTransactionAndUpdateBalance(email, transactionName);
+
+                if (deleted) {
+                    return "Transaction deleted successfully";
+                } else {
+                    res.status(404);
+                    return "Transaction not found!";
+                }
             } else {
                 res.status(404);
-                return "Transaction not found!";
+                return "User not found!";
             }
         });
     }

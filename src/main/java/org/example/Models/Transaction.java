@@ -47,4 +47,40 @@ public class Transaction {
     public void setCashName(String cashName) {
         this.cashName = cashName;
     }
+
+    public String getTransactionName() {
+        return transactionName;
+    }
+
+    public Long getCardNumber() {
+        return cardNumber;
+    }
+
+    public String getCashName() {
+        return cashName;
+    }
+
+    public int getTransactionID() {
+        return transactionID;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public boolean isCreditCard() {
+        return isCreditCard;
+    }
+
+    public boolean isIncome() {
+        return isIncome;
+    }
 }

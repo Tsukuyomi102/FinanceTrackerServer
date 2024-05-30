@@ -33,4 +33,8 @@ public class Cash {
     public int getCashBalance() {
         return this.cashBalance;
     }
+
+    public String getCashDescription() {
+        return this.cashDescription;
+    }
 }

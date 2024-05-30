@@ -43,4 +43,16 @@ public class Card {
     public Integer getCardBalance() {
         return this.cardBalance;
     }
+
+    public String getCardName() {
+        return this.cardName;
+    }
+
+    public Integer getMonth() {
+        return this.month;
+    }
+
+    public Integer getYear() {
+        return this.year;
+    }
 }
